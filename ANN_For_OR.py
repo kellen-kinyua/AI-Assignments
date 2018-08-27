@@ -1,28 +1,57 @@
-import numpy as np
-class LogicGates:
-    
-    def __init__(self, input_length, weights=None):
-        print("Inside __init__")
-        if weights is None:
-            self.weights = np.ones(input_length) * 0.5
-        else:
-            self.weights = weights
+import random
+
+X= [1,1,0,0]
+Y = [1,0,1,0]
+
+outputs = [1,1,1,0]
+
+
+def ann(X,Y,outputs):
+    w1 = random.random()
+    w2 = random.random()
+    w0 = random.random()
+    learning_rate = 0.001
+    bias = 1
+    errorcheck = False
+    while(errorcheck):
+        for i in range(4):
+            calculated = X[i] * w1 + Y[i] * w2 + bias * w0
+            error = calculated - outputs[i]
+            w1 =(learning_rate * error * X[i]) + w1
+            w2 =(learning_rate * error * Y[i]) + w2
+            if (error == 0):
+                errorcheck == True
+    return w1, w2
+def userinput():
+    while True:
+        try:
+            value1 = int(input("Please enter true[1] or false[0] for value 1: "))
+            if value1 not in range(0,2):
+                raise ValueError
+            else:
+                 break
+        except ValueError:
+            print("Invalid input. Please enter either true[1] or false[0]: ")
+    while True:
+        try:
+            value2 = int(input("Please enter true[1] or false[0] for value 2: "))
+            if value2 not in range(0,2):
+                raise ValueError
+            else:
+                break
+        except ValueError:
+            print("Invalid input. Please enter either true[1] or false[0]: ")
         
-    @staticmethod
-    def unit_step_function(x):
-        print("Inside unit_step_function")
-        if x >= 0.5:
-            return 1
-        return 0
-        
-    def __call__(self, in_data):
-        print("Inside __call__")
-        weighted_input = self.weights * in_data
-        weighted_sum = weighted_input.sum()
-        return LogicGates.unit_step_function(weighted_sum)
+            
+    return float(value1), float(value2)
+def anncheck(w1,w2,value1,value2):
+    check = value1 * w1 + value2 * w2
+
+    if (check <= 0.00):
+        print (False)
+    else:
+        print(True)
     
-p = LogicGates(2, np.array([0.5, 0.5]))
-for x in [np.array([0, 0]), np.array([0, 1]), 
-          np.array([1, 0]), np.array([1, 1])]:
-    y = p(np.array(x))
-    print(x, y)
+x,y = ann(X,Y,outputs)
+value1,value2 = userinput()
+anncheck(x,y,value1,value2)
